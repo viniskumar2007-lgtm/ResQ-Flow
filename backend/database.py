@@ -22,5 +22,5 @@ supabase_admin: Client = create_client(
 
 
 def test_database_connection():
-    response = supabase_admin.table("profiles").select("*").execute()
+    response = supabase_admin.table("profiles").select("*").limit(1).execute()
     return response.data
