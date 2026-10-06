@@ -14,7 +14,7 @@ def recommend_resources(disaster_type, severity):
             "Fire Rescue Team",
             "Ambulance",
             "Medical Team"
-        ]
+        ] 
 
     elif disaster_type == "Earthquake":
         resources = [
