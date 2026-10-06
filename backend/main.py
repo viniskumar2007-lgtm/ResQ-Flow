@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
+from auth import get_current_user
 
-from database import supabase_admin
+from database import supabase, supabase_admin
 from schemas import (
     SOSCreate,
     IncidentStatusUpdate,
@@ -34,20 +35,23 @@ def health():
 
 
 @app.post("/api/sos")
-def create_sos(sos: SOSCreate):
+def create_sos(
+    sos: SOSCreate,
+    current_user=Depends(get_current_user)
+):
 
     try:
         incident_data = {
-        "local_id": sos.local_id,
-        "name": sos.name,
-        "message": sos.message,
-        "latitude": sos.latitude,
-        "longitude": sos.longitude,
-        "people_count": sos.people_count,
-        "disaster_type": sos.disaster_type,
-        "severity": sos.severity,
-        "status": "NEW"
-    }
+            "user_id": current_user.id,
+            "name": sos.name,
+            "message": sos.message,
+            "latitude": sos.latitude,
+            "longitude": sos.longitude,
+            "people_count": sos.people_count,
+            "disaster_type": sos.disaster_type,
+            "severity": sos.severity,
+            "status": "NEW"
+        }
 
         response = (
             supabase_admin
@@ -68,8 +72,9 @@ def create_sos(sos: SOSCreate):
             detail=str(e)
         )
 @app.get("/api/incidents")
-def get_incidents():
-
+def get_incidents(
+    current_user=Depends(get_current_user)
+):
     try:
         response = (
             supabase_admin
@@ -91,7 +96,10 @@ def get_incidents():
             detail=str(e)
         )
 @app.get("/api/incidents/{incident_id}")
-def get_incident(incident_id: int):
+def get_incident(
+    incident_id: int,
+    current_user=Depends(get_current_user)
+):
 
     try:
         response = (
@@ -124,7 +132,8 @@ def get_incident(incident_id: int):
 @app.put("/api/incidents/{incident_id}/status")
 def update_incident_status(
     incident_id: int,
-    status_update: IncidentStatusUpdate
+    status_update: IncidentStatusUpdate,
+    current_user=Depends(get_current_user)
 ):
 
     allowed_statuses = [
@@ -172,8 +181,10 @@ def update_incident_status(
             detail=str(e)
         )
 @app.post("/api/resources")
-def create_resource(resource: ResourceCreate):
-
+def create_resource(
+    resource: ResourceCreate,
+    current_user=Depends(get_current_user)
+):
     allowed_types = [
         "AMBULANCE",
         "RESCUE_TEAM",
@@ -218,7 +229,9 @@ def create_resource(resource: ResourceCreate):
             detail=str(e)
         )
 @app.get("/api/resources")
-def get_resources():
+def get_resources(
+    current_user=Depends(get_current_user)
+):
 
     try:
         response = (
@@ -243,7 +256,8 @@ def get_resources():
 @app.put("/api/incidents/{incident_id}/analyze")
 def analyze_incident(
     incident_id: int,
-    analysis: IncidentAnalysis
+    analysis: IncidentAnalysis,
+    current_user=Depends(get_current_user)
 ):
 
     try:
@@ -285,7 +299,8 @@ from services.resource_engine import recommend_resources
 
 @app.post("/api/resources/recommend")
 def recommend_incident_resources(
-    request: ResourceRecommendationRequest
+    request: ResourceRecommendationRequest,
+    current_user=Depends(get_current_user)
 ):
 
     try:
@@ -305,10 +320,15 @@ def recommend_incident_resources(
             detail=str(e)
         )
 @app.post("/api/sync")
-def sync_offline_sos(sos: SyncSOSRequest):
+def sync_offline_sos(
+    sos: SyncSOSRequest,
+    current_user=Depends(get_current_user)
+):
 
     try:
         incident_data = {
+            "local_id": sos.local_id,
+            "user_id": current_user.id,
             "name": sos.name,
             "message": sos.message,
             "latitude": sos.latitude,
@@ -347,7 +367,7 @@ def login(login_data: LoginRequest):
             "password": login_data.password
         })
 
-        if not response.session:
+        if response.user is None or response.session is None:
             raise HTTPException(
                 status_code=401,
                 detail="Login failed"
@@ -368,6 +388,8 @@ def login(login_data: LoginRequest):
         raise
 
     except Exception as e:
+        print("LOGIN ERROR:", e)
+
         raise HTTPException(
             status_code=401,
             detail="Invalid email or password"
