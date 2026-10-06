@@ -1,31 +1,33 @@
 def recommend_resources(disaster_type, severity):
+    resources = []
 
-    recommendations = []
+    if disaster_type == "Flood":
+        resources = [
+            "Rescue Team",
+            "Ambulance",
+            "Medical Team",
+            "Shelter"
+        ]
 
-    if severity == "CRITICAL":
-        recommendations.extend([
-            "AMBULANCE",
-            "RESCUE_TEAM",
-            "MEDICAL_TEAM"
-        ])
+    elif disaster_type == "Fire":
+        resources = [
+            "Fire Rescue Team",
+            "Ambulance",
+            "Medical Team"
+        ] 
 
-    elif severity == "HIGH":
-        recommendations.extend([
-            "RESCUE_TEAM",
-            "MEDICAL_TEAM"
-        ])
-
-    elif severity == "MODERATE":
-        recommendations.extend([
-            "RESCUE_TEAM",
-            "SHELTER"
-        ])
+    elif disaster_type == "Earthquake":
+        resources = [
+            "Rescue Team",
+            "Ambulance",
+            "Medical Team",
+            "Shelter"
+        ]
 
     else:
-        recommendations.append("SHELTER")
+        resources = [
+            "Rescue Team"
+        ]
 
-    if disaster_type == "FLOOD":
-        if "WATER" not in recommendations:
-            recommendations.append("WATER")
-
-    return recommendations
+    return resources
+print(recommend_resources("Flood", "CRITICAL"))
