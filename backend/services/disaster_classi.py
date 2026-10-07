@@ -1,33 +1,37 @@
 # ============================================================
 # RESQ-FLOW
-# MEMBER 3 - DISASTER CLASSIFICATION
+# MEMBER 3 - AI DISASTER CLASSIFICATION
 # ============================================================
 #
-# Classifies a user's emergency message into a disaster type.
+# Classifies any user-defined emergency message.
 #
-# IMPORTANT:
-# No predefined emergency sentences are used.
-# The user can enter any unique emergency description.
+# Pipeline:
 #
-# Model:
-#   Zero-Shot Classification
-#
-# Categories:
-#   Flood
-#   Cyclone / Storm
-#   Fire
-#   Earthquake
-#   Landslide
-#   Other
+# User message
+#      ↓
+# preprocessing.py
+#      ↓
+# AI zero-shot classification
+#      ↓
+# Disaster type + confidence
 #
 # ============================================================
 
 from transformers import pipeline
 
+# ------------------------------------------------------------
+# IMPORT PREPROCESSING MODULE
+# ------------------------------------------------------------
 
-# ============================================================
-# 1. LOAD AI MODEL
-# ============================================================
+try:
+    from .preprocessing import preprocess_text
+except ImportError:
+    from preprocessing import preprocess_text
+
+
+# ------------------------------------------------------------
+# LOAD AI MODEL
+# ------------------------------------------------------------
 
 classifier = pipeline(
     "zero-shot-classification",
@@ -35,9 +39,9 @@ classifier = pipeline(
 )
 
 
-# ============================================================
-# 2. DISASTER CATEGORIES
-# ============================================================
+# ------------------------------------------------------------
+# DISASTER CATEGORIES
+# ------------------------------------------------------------
 
 DISASTER_CATEGORIES = [
     "flood",
@@ -49,9 +53,9 @@ DISASTER_CATEGORIES = [
 ]
 
 
-# ============================================================
-# 3. CLASSIFICATION FUNCTION
-# ============================================================
+# ------------------------------------------------------------
+# CLASSIFY DISASTER
+# ------------------------------------------------------------
 
 def classify_disaster(message):
 
@@ -60,89 +64,78 @@ def classify_disaster(message):
             "Emergency message cannot be empty."
         )
 
+    # Preprocess the user's message
+    cleaned_message = preprocess_text(message)
+
+    # Send cleaned message to AI model
     result = classifier(
-        message,
+        cleaned_message,
         candidate_labels=DISASTER_CATEGORIES,
         multi_label=False
     )
 
     disaster = result["labels"][0]
+
     confidence = result["scores"][0] * 100
 
     return {
+        "original_message": message,
+        "processed_message": cleaned_message,
         "disaster": disaster,
         "confidence": round(confidence, 2)
     }
 
 
-# ============================================================
-# 4. DISPLAY RESULT
-# ============================================================
-
-def print_result(message):
-
-    result = classify_disaster(message)
-
-    print("\n" + "=" * 60)
-
-    print("USER MESSAGE:")
-    print(message)
-
-    print("\nAI CLASSIFICATION:")
-
-    print(
-        "Disaster   :",
-        result["disaster"]
-    )
-
-    print(
-        "Confidence :",
-        str(result["confidence"]) + "%"
-    )
-
-    print("=" * 60)
-
-
-# ============================================================
-# 5. MAIN PROGRAM
-# ============================================================
+# ------------------------------------------------------------
+# TEST THE CLASSIFIER
+# ------------------------------------------------------------
 
 if __name__ == "__main__":
 
-    print("\nRESQ-FLOW")
-    print("AI Disaster Classification")
+    print("\n==========================================")
+    print("        RESQ-FLOW")
+    print("   AI Disaster Classification")
+    print("==========================================")
 
-    print(
-        "\nEnter any emergency description."
-    )
-
-    print(
-        "The message does not need to match a predefined statement."
-    )
-
-    print(
-        "Type 'exit' to stop."
-    )
+    print("\nEnter any emergency description.")
+    print("The description can be completely unique.")
+    print("Type 'exit' to stop.\n")
 
     while True:
 
-        message = input(
-            "\nDescribe the emergency:\n> "
-        )
+        message = input("Emergency: ")
 
-        if message.lower().strip() == "exit":
+        if message.strip().lower() == "exit":
 
-            print(
-                "\nClassification module stopped."
-            )
+            print("\nClassifier stopped.")
 
             break
 
         try:
 
-            print_result(message)
+            result = classify_disaster(message)
 
-        except Exception as error:
+            print("\nAI RESULT")
+            print("----------------------------")
+
+            print(
+                "Processed Message:",
+                result["processed_message"]
+            )
+
+            print(
+                "Disaster:",
+                result["disaster"]
+            )
+
+            print(
+                "Confidence:",
+                str(result["confidence"]) + "%"
+            )
+
+            print("----------------------------")
+
+        except (ValueError, TypeError) as error:
 
             print(
                 "\nError:",

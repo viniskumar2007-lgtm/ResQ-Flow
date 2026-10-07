@@ -3,20 +3,31 @@
 # MEMBER 3 - AI SEVERITY CLASSIFICATION
 # ============================================================
 #
-# This module analyzes a user's unique emergency description
-# and estimates the severity of the situation.
+# Classifies the severity of any user-defined emergency.
 #
-# No predefined emergency sentences are used.
+# Pipeline:
 #
-# Severity levels:
-#   Critical
-#   High
-#   Moderate
-#   Low
+# User message
+#      ↓
+# preprocessing.py
+#      ↓
+# AI zero-shot classification
+#      ↓
+# Severity + confidence
 #
 # ============================================================
 
 from transformers import pipeline
+
+
+# ------------------------------------------------------------
+# IMPORT PREPROCESSING MODULE
+# ------------------------------------------------------------
+
+try:
+    from .preprocessing import preprocess_text
+except ImportError:
+    from preprocessing import preprocess_text
 
 
 # ------------------------------------------------------------
@@ -52,8 +63,12 @@ def classify_severity(message):
             "Emergency message cannot be empty."
         )
 
+    # Preprocess user message
+    cleaned_message = preprocess_text(message)
+
+    # Send cleaned message to AI model
     result = severity_classifier(
-        message,
+        cleaned_message,
         candidate_labels=SEVERITY_LEVELS,
         multi_label=False
     )
@@ -62,24 +77,27 @@ def classify_severity(message):
 
     confidence = result["scores"][0] * 100
 
-
-    # Convert model description into a simple
-    # severity level for the rest of ResQ-Flow.
+    # Convert AI label into simple severity level
 
     if severity_description.startswith("critical"):
+
         severity = "Critical"
 
     elif severity_description.startswith("high"):
+
         severity = "High"
 
     elif severity_description.startswith("moderate"):
+
         severity = "Moderate"
 
     else:
+
         severity = "Low"
 
-
     return {
+        "original_message": message,
+        "processed_message": cleaned_message,
         "severity": severity,
         "confidence": round(confidence, 2)
     }
@@ -96,15 +114,13 @@ if __name__ == "__main__":
     print("    AI Severity Classification")
     print("==========================================")
 
-    print("\nEnter your emergency description.")
+    print("\nEnter any emergency description.")
     print("The description can be completely unique.")
     print("Type 'exit' to stop.\n")
-
 
     while True:
 
         message = input("Emergency: ")
-
 
         if message.strip().lower() == "exit":
 
@@ -112,29 +128,31 @@ if __name__ == "__main__":
 
             break
 
-
         try:
 
             result = classify_severity(message)
-
 
             print("\nAI RESULT")
             print("----------------------------")
 
             print(
-                "Severity   :",
+                "Processed Message:",
+                result["processed_message"]
+            )
+
+            print(
+                "Severity:",
                 result["severity"]
             )
 
             print(
-                "Confidence :",
+                "Confidence:",
                 str(result["confidence"]) + "%"
             )
 
             print("----------------------------")
 
-
-        except ValueError as error:
+        except (ValueError, TypeError) as error:
 
             print(
                 "\nError:",
