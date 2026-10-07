@@ -1,0 +1,313 @@
+message,disaster_type,severity
+The storm has damaged several houses We need rescue support.,cyclone,high
+The bridge is covered by rapidly rising water,flood,high
+We are trapped beneath rubble,earthquake,critical
+Very strong winds are damaging our roof,cyclone,high
+The building next door is burning,fire,high
+Trees are falling across the road,cyclone,high
+A landslide has cut off the only road out,landslide,critical
+"Please help, the local stream has burst its banks",flood,high
+"Please help, someone is having difficulty breathing",medical,critical
+Several buildings have collapsed,earthquake,critical
+The coastal area is being hit by a severe cyclone,cyclone,critical
+Our exit is blocked and we are stuck inside,other,high
+"Please help, heavy rain has flooded our road",flood,high
+Someone is having difficulty breathing,medical,critical
+Water is rising very quickly around our home Please respond quickly.,flood,critical
+We need help because the coastline has been flooded by a massive wave,tsunami,critical
+The river has overflowed and entered the neighborhood,flood,high
+Strong winds are throwing objects around Please send help.,cyclone,critical
+We have lost contact with several people,other,high
+The sea is moving dangerously toward our homes Emergency assistance is needed.,tsunami,critical
+Our roof is leaking badly during the cyclone,cyclone,medium
+"At our location, there is a dangerous situation near our location",other,high
+"At our location, the building is unstable after the earthquake",earthquake,critical
+We need help because a large amount of soil has come down onto the village,landslide,critical
+Windows are breaking from the extreme wind,cyclone,critical
+Huge waves are moving toward the town,tsunami,critical
+We need to evacuate because of the tsunami,tsunami,critical
+The warehouse is burning rapidly,fire,critical
+We need help because several rooms were destroyed when the structure collapsed,building_collapse,high
+Seawater has entered the streets Please send help.,tsunami,high
+"At our location, our house is near a landslide and we need help",landslide,critical
+Water is rising very quickly around our home,flood,critical
+Our house is near a landslide and we need help,landslide,critical
+We need help because a large wave has reached the coastal area,tsunami,critical
+People are stranded because the road is buried Please send help.,landslide,high
+We need help because an electrical short circuit caused a fire,fire,high
+The floor was shaking violently a few minutes ago,earthquake,high
+Our shop is full of rainwater,flood,medium
+We need help because the entire street is underwater,flood,high
+The coastline has been flooded by a massive wave,tsunami,critical
+Walls have collapsed after the shaking,earthquake,critical
+A fire has started near the electrical panel,fire,high
+"Please help, the drainage system has overflowed into houses",flood,high
+The apartment block has partially collapsed,building_collapse,critical
+"At our location, several buildings have collapsed",earthquake,critical
+Someone is having difficulty breathing Please send help.,medical,critical
+The ground is sliding toward several houses Please respond quickly.,landslide,critical
+Cars are being swept away by flood water,flood,critical
+"At our location, a tsunami warning has been issued and water is rising",tsunami,critical
+We lost electricity after the storm,cyclone,medium
+I have a minor injury and need assistance,medical,medium
+"Please help, mud has covered the road completely",landslide,high
+Someone has a serious injury and needs immediate assistance,medical,critical
+Mud has covered the road completely,landslide,high
+Concrete debris has fallen onto several people,building_collapse,critical
+The ocean has suddenly surged inland,tsunami,critical
+We need help because water has reached the roof of the house,flood,critical
+The roof has fallen down after the earthquake Please respond quickly.,earthquake,critical
+Fire has spread to several rooms Emergency assistance is needed.,fire,critical
+We are outside because our building may collapse Please send help.,earthquake,critical
+"Please help, the wind is strong enough to damage buildings",cyclone,critical
+There are multiple injured people here,medical,critical
+There are injured people waiting for help,medical,high
+My leg is badly injured and I cannot move,medical,high
+The floor was shaking violently a few minutes ago We need rescue support.,earthquake,high
+People near the beach are running inland,tsunami,critical
+People are trapped inside a burning building Please respond quickly.,fire,critical
+The storm has destroyed part of the building,cyclone,high
+"Please help, more rocks are falling from the mountain",landslide,critical
+There was a very strong tremor and many objects fell,earthquake,high
+A landslide has cut off the only road out We need rescue support.,landslide,critical
+Heavy rain has flooded our road,flood,high
+A flash flood is moving toward our area Please respond quickly.,flood,critical
+Fire has spread to several rooms,fire,critical
+The kitchen is on fire,fire,high
+The building has collapsed and people may be trapped Please send help.,building_collapse,critical
+The ceiling collapsed during the shaking,earthquake,critical
+Our house near the beach has been flooded by seawater Please send help.,tsunami,critical
+A person has chest pain and needs urgent help,medical,critical
+I have a deep wound after the disaster We need rescue support.,medical,high
+"At our location, several homes have been damaged by the landslide",landslide,critical
+"At our location, the ground is shaking and the building is damaged",earthquake,critical
+The structure is severely damaged and unsafe,building_collapse,high
+People are stranded and cannot leave,other,high
+More rocks are falling from the mountain,landslide,critical
+"At our location, heavy rain and dangerous winds are hitting us",cyclone,high
+The wind is strong enough to damage buildings,cyclone,critical
+We need a first aid team here,medical,high
+The warehouse is burning rapidly We need rescue support.,fire,critical
+"At our location, we are trapped and need emergency assistance",other,critical
+People are stranded on rooftops because of the flood,flood,critical
+Water is rushing into the coastal neighborhood,tsunami,critical
+Mud is entering our home from the hillside,landslide,high
+People cannot travel because of cyclone debris,cyclone,high
+Someone is unconscious and needs an ambulance,medical,critical
+A gas cylinder caught fire Please respond quickly.,fire,critical
+Strong winds are throwing objects around,cyclone,critical
+A massive surge has entered the town We need rescue support.,tsunami,critical
+A flash flood is moving toward our area,flood,critical
+Flood water is coming through the doors,flood,high
+We need rescue support as soon as possible,other,high
+People are stranded near the coast after the wave,tsunami,critical
+The retaining wall has failed and soil is moving,landslide,critical
+We are trapped inside because debris is blocking the door,cyclone,critical
+We need help because a landslide has blocked the road,landslide,high
+Smoke is coming from the house next door,fire,medium
+The basement is completely flooded,flood,medium
+Another tremor just occurred,earthquake,medium
+Water is carrying debris through the streets,tsunami,critical
+A wall fell and blocked the exit Please send help.,building_collapse,high
+Power lines are down after the cyclone,cyclone,high
+An elderly person needs urgent medical attention,medical,high
+The storm has damaged several houses,cyclone,high
+There is thick black smoke outside the building,fire,high
+"At our location, the basement is completely flooded",flood,medium
+Several coastal buildings are damaged by the waves,tsunami,high
+Rocks and soil are falling down the hillside We need rescue support.,landslide,high
+The ceiling collapsed inside the house,building_collapse,high
+The local stream has burst its banks,flood,high
+"Please help, the sea is moving dangerously toward our homes",tsunami,critical
+People are stranded because the road is buried,landslide,high
+A large wave has reached the coastal area,tsunami,critical
+Heavy rain has flooded our road Emergency assistance is needed.,flood,high
+A large amount of soil has come down onto the village,landslide,critical
+We need help because a person is trapped and appears to be unconscious,medical,critical
+We need help because a wall collapsed onto the street,building_collapse,high
+The shoreline has been hit by unusually large waves,tsunami,high
+Someone fainted and is not responding normally We need rescue support.,medical,critical
+Very strong winds are damaging our roof Please send help.,cyclone,high
+We are trapped beneath rubble We need rescue support.,earthquake,critical
+A wall fell and blocked the exit,building_collapse,high
+"At our location, the roof is burning and people are still inside",fire,critical
+The entire front section of the building collapsed,building_collapse,critical
+"Please help, fire has spread to several rooms",fire,critical
+The building is unstable and may collapse,building_collapse,critical
+The fire is getting larger and we cannot control it,fire,critical
+Walls have collapsed after the shaking Emergency assistance is needed.,earthquake,critical
+The drainage system has overflowed into houses Please send help.,flood,high
+Seawater has entered the streets,tsunami,high
+Someone is bleeding after being hit by debris,medical,critical
+We need help because there is water inside our building and children are trapped,flood,critical
+Someone fainted and is not responding normally,medical,critical
+The sea suddenly moved far away from the shore We need rescue support.,tsunami,critical
+We need help because the roof collapsed while people were inside,building_collapse,critical
+Several people need urgent assistance,other,critical
+The local stream has burst its banks Emergency assistance is needed.,flood,high
+We need help because our exit is blocked and we are stuck inside,other,high
+The entire street is underwater,flood,high
+A person has severe burns and needs treatment,medical,critical
+"Please help, our house near the beach has been flooded by seawater",tsunami,critical
+"At our location, windows are breaking from the extreme wind",cyclone,critical
+The building has collapsed and people may be trapped,building_collapse,critical
+Trees are falling across the road Please respond quickly.,cyclone,high
+"At our location, we need a first aid team here",medical,high
+A damaged building is starting to fall apart,building_collapse,critical
+The road is blocked by fallen trees after the storm,cyclone,high
+A small fire started in the kitchen,fire,medium
+People are trapped under fallen rocks,landslide,critical
+We need help because people are stranded near the coast after the wave,tsunami,critical
+We need medical assistance at our location,medical,high
+We need help because mud is entering our home from the hillside,landslide,high
+"At our location, we need to evacuate because of the tsunami",tsunami,critical
+People are stuck inside a collapsed structure,building_collapse,critical
+"Please help, there is a person bleeding heavily",medical,critical
+"At our location, a large tree has fallen onto our house",cyclone,critical
+Our windows have broken because of the storm,cyclone,high
+"Please help, we are outside because our building may collapse",earthquake,critical
+The hillside collapsed after heavy rain,landslide,high
+The wind is strong enough to damage buildings Emergency assistance is needed.,cyclone,critical
+We are evacuating because a tsunami is approaching,tsunami,critical
+The drainage system has overflowed into houses,flood,high
+The forest nearby is on fire,fire,high
+The roof is burning and people are still inside,fire,critical
+"Please help, my house is filling with water and we cannot get outside",flood,critical
+A tsunami warning has been issued and water is rising,tsunami,critical
+We need help because the fire is getting larger and we cannot control it,fire,critical
+We hear cracking sounds from the damaged structure,building_collapse,high
+"At our location, flood water is coming through the doors",flood,high
+The roof has fallen down after the earthquake,earthquake,critical
+Heavy rain caused the ground to slide,landslide,high
+"Please help, very strong winds are damaging our roof",cyclone,high
+The bridge is covered by rapidly rising water We need rescue support.,flood,high
+The coastal area is being hit by a severe cyclone Please respond quickly.,cyclone,critical
+A strong earthquake just happened,earthquake,high
+We cannot reach the village because of the landslide,landslide,high
+"Please help, strong winds are throwing objects around",cyclone,critical
+The old building has partially fallen down,building_collapse,high
+We can smell heavy smoke and see flames,fire,critical
+"Please help, we cannot get out of the area and need rescue",other,high
+The sea suddenly moved far away from the shore,tsunami,critical
+"Please help, a wall fell and blocked the exit",building_collapse,high
+My house is filling with water and we cannot get outside,flood,critical
+"At our location, a section of the house has fallen down",building_collapse,high
+A concrete slab has fallen onto the road Please respond quickly.,building_collapse,high
+I cannot breathe and need medical help,medical,critical
+We need help because we can smell heavy smoke and see flames,fire,critical
+We need help because i have a minor injury and need assistance,medical,medium
+My child is badly injured,medical,critical
+My house is filling with water and we cannot get outside Please send help.,flood,critical
+A huge rockfall has blocked traffic,landslide,high
+A vehicle has caught fire on the road,fire,high
+A cyclone is approaching our town,cyclone,high
+The sea is moving dangerously toward our homes,tsunami,critical
+"Please help, people are stranded because the road is buried",landslide,high
+More rocks are falling from the mountain Emergency assistance is needed.,landslide,critical
+There is a person bleeding heavily Emergency assistance is needed.,medical,critical
+Our village is surrounded by water,flood,critical
+We have lost contact with several people We need rescue support.,other,high
+"Please help, a vehicle has caught fire on the road",fire,high
+The building is unstable and may collapse We need rescue support.,building_collapse,critical
+A gas cylinder caught fire,fire,critical
+We need help because the road is blocked by fallen trees after the storm,cyclone,high
+We are trapped upstairs because of flooding,flood,critical
+A wall collapsed onto the street,building_collapse,high
+An electrical short circuit caused a fire,fire,high
+"Please help, seawater has entered the streets",tsunami,high
+We cannot get out of the area and need rescue,other,high
+We need help because the roof has been blown away by the storm,cyclone,critical
+"Please help, there are injured people waiting for help",medical,high
+Rubble is covering the entrance,building_collapse,high
+The roof has been blown away by the storm,cyclone,critical
+"Please help, the road is cracked following the earthquake",earthquake,high
+A concrete slab has fallen onto the road,building_collapse,high
+Several rooms were destroyed when the structure collapsed,building_collapse,high
+We need help because several coastal buildings are damaged by the waves,tsunami,high
+There is water inside our building and children are trapped,flood,critical
+A large tree has fallen onto our house,cyclone,critical
+"At our location, the apartment block has partially collapsed",building_collapse,critical
+Heavy rain and dangerous winds are hitting us,cyclone,high
+People are trapped under fallen concrete,earthquake,critical
+"At our location, the hill has collapsed near the settlement",landslide,high
+Our house near the beach has been flooded by seawater,tsunami,critical
+The ground is shaking and the building is damaged,earthquake,critical
+People are trapped under the rubble,building_collapse,critical
+Rubble is covering the entrance Emergency assistance is needed.,building_collapse,high
+The road is cracked following the earthquake Emergency assistance is needed.,earthquake,high
+A massive surge has entered the town,tsunami,critical
+Flames are spreading across the house,fire,critical
+"Please help, rubble is covering the entrance",building_collapse,high
+A person is trapped and appears to be unconscious,medical,critical
+Rocks and soil are falling down the hillside,landslide,high
+The storm has destroyed part of the building Emergency assistance is needed.,cyclone,high
+We need help because people are trapped under fallen concrete,earthquake,critical
+We need help because a major tremor damaged the neighborhood,earthquake,high
+People are trapped inside a burning building,fire,critical
+"At our location, i cannot breathe and need medical help",medical,critical
+We are evacuating because a tsunami is approaching Please respond quickly.,tsunami,critical
+There are injured people waiting for help Emergency assistance is needed.,medical,high
+"At our location, flames are coming from the second floor",fire,critical
+Water has reached the roof of the house,flood,critical
+Furniture is falling because of the earthquake,earthquake,high
+The hill has collapsed near the settlement,landslide,high
+"Please help, the ceiling collapsed inside the house",building_collapse,high
+We need help because we are trapped inside because debris is blocking the door,cyclone,critical
+"At our location, the old building has partially fallen down",building_collapse,high
+A vehicle has caught fire on the road Please send help.,fire,high
+Please send help to our location immediately,other,high
+Our house has developed large cracks,earthquake,high
+We need help because the ceiling collapsed during the shaking,earthquake,critical
+"Please help, a fire has started near the electrical panel",fire,high
+"At our location, a person has been injured and cannot walk",medical,high
+I have a deep wound after the disaster,medical,high
+Our apartment building is leaning after the quake,earthquake,critical
+Flood water has reached the first floor,flood,high
+There are cracks all over the walls after the tremor,earthquake,high
+A landslide has blocked the road,landslide,high
+"Please help, walls have collapsed after the shaking",earthquake,critical
+Flames are coming from the second floor,fire,critical
+My leg is badly injured and I cannot move Please respond quickly.,medical,high
+The slope behind our house is collapsing,landslide,critical
+People are injured after the ground shook,earthquake,critical
+"At our location, someone is bleeding after being hit by debris",medical,critical
+Mud has covered the road completely Please send help.,landslide,high
+We cannot leave because the roads are submerged,flood,high
+Several homes have been damaged by the landslide,landslide,critical
+People are trapped under the rubble Please respond quickly.,building_collapse,critical
+There is a dangerous situation near our location,other,high
+We cannot get out of the area and need rescue Emergency assistance is needed.,other,high
+The roof collapsed while people were inside,building_collapse,critical
+"At our location, the shoreline has been hit by unusually large waves",tsunami,high
+The road is buried under mud and rocks Please respond quickly.,landslide,high
+The road is cracked following the earthquake,earthquake,high
+A major tremor damaged the neighborhood,earthquake,high
+"At our location, we are trapped upstairs because of flooding",flood,critical
+"At our location, the kitchen is on fire",fire,high
+"Please help, people are stranded and cannot leave",other,high
+We need help because there is a fire inside our building,fire,critical
+Emergency help is required here,other,high
+The building is unstable after the earthquake,earthquake,critical
+We are outside because our building may collapse,earthquake,critical
+"Please help, the storm has destroyed part of the building",cyclone,high
+We need help because a huge rockfall has blocked traffic,landslide,high
+Smoke is filling the apartment,fire,critical
+We are trapped and need emergency assistance,other,critical
+The ceiling collapsed inside the house Emergency assistance is needed.,building_collapse,high
+A fire has started near the electrical panel Please send help.,fire,high
+Water is rushing into the coastal neighborhood Please respond quickly.,tsunami,critical
+We need help because someone has a serious injury and needs immediate assistance,medical,critical
+The first wave has damaged buildings near the shore,tsunami,critical
+A section of the house has fallen down,building_collapse,high
+Coastal roads are underwater after the huge wave,tsunami,high
+The ground is sliding toward several houses,landslide,critical
+The road is buried under mud and rocks,landslide,high
+"At our location, people are injured after the ground shook",earthquake,critical
+Part of the roof has fallen down,building_collapse,high
+People are stranded and cannot leave Please send help.,other,high
+There is a fire inside our building,fire,critical
+Smoke is filling the apartment We need rescue support.,fire,critical
+The cyclone is getting closer and conditions are worsening,cyclone,high
+A person has been injured and cannot walk,medical,high
+"Please help, the building has collapsed and people may be trapped",building_collapse,critical
+There is a person bleeding heavily,medical,critical
