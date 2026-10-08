@@ -1,23 +1,23 @@
 """
 ResQ-Flow AI Model Training
 
-Trains a text classification model for:
+Trains a DistilBERT text classification model for:
+
 1. Disaster type
 2. Severity
 
 Input CSV:
     message,disaster_type,severity
 
-Example:
-    "Water has entered my house",flood,high
+The emergency messages come from the dataset.
+No emergency messages are hardcoded in this program.
 """
 
 import os
-import pandas as pd
+import json
+import random
 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score, classification_report
+import pandas as pd
 
 from transformers import (
     AutoTokenizer,
@@ -35,9 +35,28 @@ from datasets import Dataset
 
 MODEL_NAME = "distilbert-base-uncased"
 
-DATASET_PATH = "backend/data/emergency_dataset.csv"
+BASE_DIR = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        ".."
+    )
+)
 
-OUTPUT_DIR = "backend/models/disaster_model"
+DATASET_PATH = os.path.join(
+    BASE_DIR,
+    "backend",
+    "services",
+    "emergency_dataset.csv",
+)
+
+
+OUTPUT_DIR = os.path.join(
+    BASE_DIR,
+    "backend",
+    "models",
+    "disaster_model"
+)
 
 TEST_SIZE = 0.2
 
@@ -48,9 +67,21 @@ RANDOM_STATE = 42
 # LOAD DATASET
 # ============================================================
 
-print("\nLoading dataset...")
+print("\n==============================")
+print("RESQ-FLOW AI MODEL TRAINING")
+print("==============================")
 
-df = pd.read_csv(DATASET_PATH)
+print("\nLoading dataset...")
+print("Dataset:", DATASET_PATH)
+
+if not os.path.exists(DATASET_PATH):
+    raise FileNotFoundError(
+        f"Dataset not found: {DATASET_PATH}"
+    )
+
+df = pd.read_csv(
+    DATASET_PATH
+)
 
 required_columns = [
     "message",
@@ -59,80 +90,232 @@ required_columns = [
 ]
 
 for column in required_columns:
+
     if column not in df.columns:
+
         raise ValueError(
             f"Missing column in dataset: {column}"
         )
 
-# Remove empty rows
+
+# ============================================================
+# CLEAN DATA
+# ============================================================
+
 df = df.dropna(
     subset=required_columns
 )
 
-# Remove duplicate messages
+df["message"] = (
+    df["message"]
+    .astype(str)
+    .str.strip()
+)
+
+df["disaster_type"] = (
+    df["disaster_type"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
+
+df["severity"] = (
+    df["severity"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
+
+df = df[
+    df["message"] != ""
+]
+
 df = df.drop_duplicates(
     subset=["message"]
 )
 
-print(f"Total training samples: {len(df)}")
+print(
+    f"\nTotal training samples: {len(df)}"
+)
 
 
 # ============================================================
-# ENCODE DISASTER TYPES
+# DISPLAY DATASET CLASSES
 # ============================================================
 
-disaster_encoder = LabelEncoder()
+disaster_classes = sorted(
+    df["disaster_type"].unique()
+)
 
-df["disaster_label"] = disaster_encoder.fit_transform(
-    df["disaster_type"]
+severity_classes = sorted(
+    df["severity"].unique()
 )
 
 print("\nDisaster classes:")
 
 for index, label in enumerate(
-    disaster_encoder.classes_
+    disaster_classes
 ):
-    print(index, "=", label)
 
+    print(
+        index,
+        "=",
+        label
+    )
 
-# ============================================================
-# ENCODE SEVERITY
-# ============================================================
-
-severity_encoder = LabelEncoder()
-
-df["severity_label"] = severity_encoder.fit_transform(
-    df["severity"]
-)
 
 print("\nSeverity classes:")
 
 for index, label in enumerate(
-    severity_encoder.classes_
+    severity_classes
 ):
-    print(index, "=", label)
+
+    print(
+        index,
+        "=",
+        label
+    )
+
+
+# ============================================================
+# CREATE LABEL MAPPINGS
+# ============================================================
+
+disaster_to_id = {
+    label: index
+    for index, label
+    in enumerate(disaster_classes)
+}
+
+severity_to_id = {
+    label: index
+    for index, label
+    in enumerate(severity_classes)
+}
+
+
+df["disaster_label"] = df[
+    "disaster_type"
+].map(
+    disaster_to_id
+)
+
+df["severity_label"] = df[
+    "severity"
+].map(
+    severity_to_id
+)
 
 
 # ============================================================
 # TRAIN / TEST SPLIT
 # ============================================================
 
-train_df, test_df = train_test_split(
+def stratified_split(
+    dataframe,
+    label_column,
+    test_size=0.2,
+    random_state=42
+):
+
+    random.seed(
+        random_state
+    )
+
+    train_parts = []
+    test_parts = []
+
+    for _, group in dataframe.groupby(
+        label_column
+    ):
+
+        group = group.sample(
+            frac=1,
+            random_state=random_state
+        )
+
+        if len(group) <= 1:
+
+            train_parts.append(
+                group
+            )
+
+            continue
+
+        test_count = max(
+            1,
+            int(
+                len(group) * test_size
+            )
+        )
+
+        test_parts.append(
+            group.iloc[
+                :test_count
+            ]
+        )
+
+        train_parts.append(
+            group.iloc[
+                test_count:
+            ]
+        )
+
+    train_data = pd.concat(
+        train_parts
+    ).sample(
+        frac=1,
+        random_state=random_state
+    ).reset_index(
+        drop=True
+    )
+
+    if test_parts:
+
+        test_data = pd.concat(
+            test_parts
+        ).sample(
+            frac=1,
+            random_state=random_state
+        ).reset_index(
+            drop=True
+        )
+
+    else:
+
+        test_data = pd.DataFrame(
+            columns=dataframe.columns
+        )
+
+    return train_data, test_data
+
+
+train_df, test_df = stratified_split(
     df,
-    test_size=TEST_SIZE,
-    random_state=RANDOM_STATE,
-    stratify=df["disaster_label"],
+    "disaster_label",
+    TEST_SIZE,
+    RANDOM_STATE
 )
 
-print("\nTraining samples:", len(train_df))
-print("Testing samples:", len(test_df))
+
+print(
+    "\nTraining samples:",
+    len(train_df)
+)
+
+print(
+    "Testing samples:",
+    len(test_df)
+)
 
 
 # ============================================================
 # TOKENIZER
 # ============================================================
 
-print("\nLoading tokenizer...")
+print(
+    "\nLoading tokenizer..."
+)
 
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_NAME
@@ -150,7 +333,7 @@ def tokenize(batch):
 
 
 # ============================================================
-# CREATE DATASETS
+# CREATE HUGGING FACE DATASETS
 # ============================================================
 
 train_dataset = Dataset.from_pandas(
@@ -159,7 +342,8 @@ train_dataset = Dataset.from_pandas(
             "message",
             "disaster_label",
         ]
-    ]
+    ],
+    preserve_index=False
 )
 
 test_dataset = Dataset.from_pandas(
@@ -168,29 +352,30 @@ test_dataset = Dataset.from_pandas(
             "message",
             "disaster_label",
         ]
-    ]
+    ],
+    preserve_index=False
 )
 
 
 train_dataset = train_dataset.map(
     tokenize,
-    batched=True,
+    batched=True
 )
 
 test_dataset = test_dataset.map(
     tokenize,
-    batched=True,
+    batched=True
 )
 
 
 train_dataset = train_dataset.rename_column(
     "disaster_label",
-    "labels",
+    "labels"
 )
 
 test_dataset = test_dataset.rename_column(
     "disaster_label",
-    "labels",
+    "labels"
 )
 
 
@@ -200,7 +385,7 @@ train_dataset.set_format(
         "input_ids",
         "attention_mask",
         "labels",
-    ],
+    ]
 )
 
 test_dataset.set_format(
@@ -209,46 +394,26 @@ test_dataset.set_format(
         "input_ids",
         "attention_mask",
         "labels",
-    ],
+    ]
 )
 
 
 # ============================================================
-# MODEL
+# LOAD MODEL
 # ============================================================
 
-print("\nLoading model...")
+print(
+    "\nLoading DistilBERT model..."
+)
 
 num_classes = len(
-    disaster_encoder.classes_
+    disaster_classes
 )
 
 model = AutoModelForSequenceClassification.from_pretrained(
     MODEL_NAME,
-    num_labels=num_classes,
+    num_labels=num_classes
 )
-
-
-# ============================================================
-# TRAINING METRICS
-# ============================================================
-
-def compute_metrics(eval_prediction):
-
-    predictions, labels = eval_prediction
-
-    predictions = predictions.argmax(
-        axis=-1
-    )
-
-    accuracy = accuracy_score(
-        labels,
-        predictions,
-    )
-
-    return {
-        "accuracy": accuracy
-    }
 
 
 # ============================================================
@@ -294,8 +459,6 @@ trainer = Trainer(
     train_dataset=train_dataset,
 
     eval_dataset=test_dataset,
-
-    compute_metrics=compute_metrics,
 )
 
 
@@ -303,9 +466,18 @@ trainer = Trainer(
 # START TRAINING
 # ============================================================
 
-print("\n==============================")
-print("STARTING RESQ-FLOW TRAINING")
-print("==============================\n")
+print(
+    "\n=============================="
+)
+
+print(
+    "STARTING RESQ-FLOW TRAINING"
+)
+
+print(
+    "==============================\n"
+)
+
 
 trainer.train()
 
@@ -314,13 +486,31 @@ trainer.train()
 # EVALUATION
 # ============================================================
 
-print("\n==============================")
-print("MODEL EVALUATION")
-print("==============================")
+print(
+    "\n=============================="
+)
+
+print(
+    "MODEL EVALUATION"
+)
+
+print(
+    "=============================="
+)
 
 results = trainer.evaluate()
 
-print(results)
+print(
+    "\nEvaluation results:"
+)
+
+for key, value in results.items():
+
+    print(
+        key,
+        ":",
+        value
+    )
 
 
 # ============================================================
@@ -345,16 +535,13 @@ tokenizer.save_pretrained(
 # SAVE LABEL MAPPINGS
 # ============================================================
 
-import json
-
-
 label_mapping = {
 
     "disaster_labels": {
         str(index): label
         for index, label
         in enumerate(
-            disaster_encoder.classes_
+            disaster_classes
         )
     },
 
@@ -362,9 +549,10 @@ label_mapping = {
         str(index): label
         for index, label
         in enumerate(
-            severity_encoder.classes_
+            severity_classes
         )
     }
+
 }
 
 
@@ -374,20 +562,36 @@ with open(
         "label_mapping.json"
     ),
     "w",
-    encoding="utf-8",
+    encoding="utf-8"
 ) as file:
 
     json.dump(
         label_mapping,
         file,
-        indent=4,
+        indent=4
     )
 
 
-print("\n==============================")
-print("TRAINING COMPLETE")
-print("==============================")
+# ============================================================
+# COMPLETE
+# ============================================================
 
 print(
-    f"\nModel saved to: {OUTPUT_DIR}"
+    "\n=============================="
+)
+
+print(
+    "TRAINING COMPLETE"
+)
+
+print(
+    "=============================="
+)
+
+print(
+    "\nModel saved to:"
+)
+
+print(
+    OUTPUT_DIR
 )
