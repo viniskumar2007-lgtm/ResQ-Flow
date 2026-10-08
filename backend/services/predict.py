@@ -93,8 +93,9 @@ def predict_emergency(message):
     # ========================================================
 
     priority_result = calculate_priority(
-        urgency_score
-    )
+    message_analysis,
+    message
+)
 
     # ========================================================
     # 6. RECOMMEND RESOURCES
