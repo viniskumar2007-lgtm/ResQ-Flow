@@ -1,3 +1,6 @@
+from services.predict import predict_emergency
+from services.resource_engine import recommend_resources
+
 from fastapi import FastAPI, HTTPException, Depends
 from auth import get_current_user
 
@@ -39,6 +42,145 @@ def create_sos(
     sos: SOSCreate,
     current_user=Depends(get_current_user)
 ):
+
+    try:
+        # ====================================================
+        # 1. RUN AI ANALYSIS
+        # ====================================================
+
+        prediction = predict_emergency(sos.message)
+
+        # Get disaster information from AI
+        disaster_result = prediction.get("disaster", {})
+
+        if isinstance(disaster_result, dict):
+            disaster_type = disaster_result.get(
+                "primary",
+                "other"
+            )
+
+            ai_confidence = disaster_result.get(
+                "confidence",
+                0.0
+            )
+
+        else:
+            disaster_type = str(disaster_result)
+            ai_confidence = 0.0
+
+        # Get urgency information from AI
+        urgency_score = prediction.get(
+            "urgency_score",
+            0
+        )
+
+        urgency_level = prediction.get(
+            "urgency_level",
+            "NONE"
+        )
+
+        # ====================================================
+        # 2. GET PRIORITY
+        # ====================================================
+
+        priority_result = prediction.get(
+            "priority",
+            {}
+        )
+
+        priority_score = priority_result.get(
+            "urgency_score",
+            urgency_score
+        )
+
+        priority_level = priority_result.get(
+            "priority_level",
+            urgency_level
+        )
+
+        # ====================================================
+        # 3. GET RECOMMENDED RESOURCES
+        # ====================================================
+
+        resources = prediction.get(
+            "resources",
+            recommend_resources(
+                disaster_type,
+                urgency_level
+            )
+        )
+
+        # ====================================================
+        # 4. CREATE INCIDENT DATA
+        # ====================================================
+
+        incident_data = {
+            "user_id": current_user.id,
+
+            "name": sos.name,
+
+            "message": sos.message,
+
+            "latitude": sos.latitude,
+
+            "longitude": sos.longitude,
+
+            "people_count": sos.people_count,
+
+            "disaster_type": disaster_type,
+
+            "severity": urgency_level,
+
+            "priority_score": priority_score,
+
+            "ai_confidence": ai_confidence,
+
+            "status": "NEW"
+        }
+
+        # ====================================================
+        # 5. SAVE TO SUPABASE
+        # ====================================================
+
+        response = (
+            supabase_admin
+            .table("incidents")
+            .insert(incident_data)
+            .execute()
+        )
+
+        # ====================================================
+        # 6. RETURN COMPLETE RESULT
+        # ====================================================
+
+        return {
+            "success": True,
+
+            "message": "SOS analyzed and created successfully",
+
+            "incident": response.data[0],
+
+            "ai_analysis": {
+                "disaster_type": disaster_type,
+                "confidence": ai_confidence,
+                "urgency_score": urgency_score,
+                "urgency_level": urgency_level
+            },
+
+            "priority": {
+                "score": priority_score,
+                "level": priority_level
+            },
+
+            "recommended_resources": resources
+        }
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 
     try:
         incident_data = {
@@ -294,7 +436,7 @@ def analyze_incident(
             status_code=500,
             detail=str(e)
         )
-from services.resource_engine import recommend_resources
+
 
 
 @app.post("/api/resources/recommend")
