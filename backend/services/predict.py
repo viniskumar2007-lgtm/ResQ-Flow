@@ -34,8 +34,8 @@ try:
 except ImportError:
     from preprocessing import preprocess_text
     from ai_message import analyze_message
-    from backend.services.disaster_classification import classify_disaster
-    from backend.services.severity_classification import classify_severity
+    from disaster_classification import classify_disaster
+    from severity_classification import classify_severity
 
 
 # ------------------------------------------------------------
