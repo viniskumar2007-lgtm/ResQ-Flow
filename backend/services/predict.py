@@ -3,92 +3,111 @@
 # MEMBER 3 - AI PREDICTION PIPELINE
 # ============================================================
 #
-# This file combines the AI modules into one prediction
-# pipeline.
-#
 # User message
 #       ↓
 # Preprocessing
 #       ↓
-# Message Analysis
+# AI Message Analysis
 #       ↓
-# Disaster Classification
+# Urgency
 #       ↓
-# Severity Classification
+# Priority
 #       ↓
-# Combined AI Result
+# Resource Recommendation
 #
 # ============================================================
 
 
-# ------------------------------------------------------------
-# IMPORT AI MODULES
-# ------------------------------------------------------------
-
 try:
     from .preprocessing import preprocess_text
     from .ai_message import analyze_message
-    from .disaster_classification import classify_disaster
-    from .severity_classification import classify_severity
+    from .priority_engine import calculate_priority
+    from .resource_engine import recommend_resources
 
 except ImportError:
     from preprocessing import preprocess_text
     from ai_message import analyze_message
-    from disaster_classification import classify_disaster
-    from severity_classification import classify_severity
+    from priority_engine import calculate_priority
+    from resource_engine import recommend_resources
 
-
-# ------------------------------------------------------------
-# MAIN PREDICTION FUNCTION
-# ------------------------------------------------------------
 
 def predict_emergency(message):
 
     if not message or not message.strip():
+        raise ValueError("Emergency message cannot be empty.")
 
-        raise ValueError(
-            "Emergency message cannot be empty."
+    # ========================================================
+    # 1. PREPROCESS MESSAGE
+    # ========================================================
+
+    processed_message = preprocess_text(message)
+
+    # ========================================================
+    # 2. AI MESSAGE ANALYSIS
+    # ========================================================
+
+    message_analysis = analyze_message(processed_message)
+
+    # ========================================================
+    # 3. GET DISASTER INFORMATION
+    # ========================================================
+
+    disaster_result = message_analysis.get(
+        "disaster",
+        {}
+    )
+
+    if isinstance(disaster_result, dict):
+
+        disaster_type = disaster_result.get(
+            "primary",
+            "other"
         )
 
-    # --------------------------------------------------------
-    # STEP 1 - PREPROCESSING
-    # --------------------------------------------------------
+        disaster_confidence = disaster_result.get(
+            "confidence"
+        )
 
-    processed_message = preprocess_text(
-        message
+    else:
+
+        disaster_type = str(disaster_result)
+
+        disaster_confidence = None
+
+    # ========================================================
+    # 4. GET AI URGENCY
+    # ========================================================
+
+    urgency_score = message_analysis.get(
+        "urgency_score",
+        0
     )
 
-
-    # --------------------------------------------------------
-    # STEP 2 - MESSAGE ANALYSIS
-    # --------------------------------------------------------
-
-    message_analysis = analyze_message(
-        processed_message
+    urgency_level = message_analysis.get(
+        "urgency_level",
+        "NONE"
     )
 
+    # ========================================================
+    # 5. CALCULATE PRIORITY
+    # ========================================================
 
-    # --------------------------------------------------------
-    # STEP 3 - DISASTER CLASSIFICATION
-    # --------------------------------------------------------
-
-    disaster_result = classify_disaster(
-        processed_message
+    priority_result = calculate_priority(
+        urgency_score
     )
 
+    # ========================================================
+    # 6. RECOMMEND RESOURCES
+    # ========================================================
 
-    # --------------------------------------------------------
-    # STEP 4 - SEVERITY CLASSIFICATION
-    # --------------------------------------------------------
-
-    severity_result = classify_severity(
-        processed_message
+    resources = recommend_resources(
+        disaster_type,
+        urgency_level
     )
 
-
-    # --------------------------------------------------------
-    # STEP 5 - COMBINE RESULTS
-    # --------------------------------------------------------
+    # ========================================================
+    # 7. COMBINED RESULT
+    # ========================================================
 
     prediction = {
 
@@ -98,153 +117,48 @@ def predict_emergency(message):
 
         "message_analysis": message_analysis,
 
-        "disaster": disaster_result,
+        "disaster": {
+            "primary": disaster_type,
+            "confidence": disaster_confidence
+        },
 
-        "severity": severity_result
+        "urgency_score": urgency_score,
 
+        "urgency_level": urgency_level,
+
+        "priority": priority_result,
+
+        "resources": resources
     }
-
 
     return prediction
 
 
-# ------------------------------------------------------------
-# DISPLAY RESULT
-# ------------------------------------------------------------
-
-def print_prediction(result):
-
-    print("\n")
-    print("=" * 60)
-    print("              RESQ-FLOW AI RESULT")
-    print("=" * 60)
-
-
-    print("\nORIGINAL MESSAGE")
-    print("----------------------------")
-
-    print(
-        result["original_message"]
-    )
-
-
-    print("\nPROCESSED MESSAGE")
-    print("----------------------------")
-
-    print(
-        result["processed_message"]
-    )
-
-
-    print("\nMESSAGE ANALYSIS")
-    print("----------------------------")
-
-    analysis = result["message_analysis"]
-
-    for key, value in analysis.items():
-
-        print(
-            f"{key}: {value}"
-        )
-
-
-    print("\nDISASTER CLASSIFICATION")
-    print("----------------------------")
-
-    disaster = result["disaster"]
-
-    print(
-        "Disaster   :",
-        disaster.get("disaster")
-    )
-
-    print(
-        "Confidence :",
-        str(disaster.get("confidence")) + "%"
-    )
-
-
-    print("\nSEVERITY CLASSIFICATION")
-    print("----------------------------")
-
-    severity = result["severity"]
-
-    print(
-        "Severity   :",
-        severity.get("severity")
-    )
-
-    print(
-        "Confidence :",
-        str(severity.get("confidence")) + "%"
-    )
-
-
-    print("\n")
-    print("=" * 60)
-
-
-# ------------------------------------------------------------
-# TEST THE COMPLETE PIPELINE
-# ------------------------------------------------------------
+# ============================================================
+# TEST
+# ============================================================
 
 if __name__ == "__main__":
 
-    print("\n==========================================")
-    print("             RESQ-FLOW")
-    print("         AI PREDICTION PIPELINE")
-    print("==========================================")
-
-    print(
-        "\nEnter any emergency description."
+    result = predict_emergency(
+        "The water is entering my house and my grandmother is trapped upstairs"
     )
 
-    print(
-        "The message can be completely unique."
-    )
+    print("\n===== RESQ-FLOW AI RESULT =====")
 
-    print(
-        "Type 'exit' to stop.\n"
-    )
+    print("\nDisaster:")
+    print(result["disaster"])
 
+    print("\nUrgency Score:")
+    print(result["urgency_score"])
 
-    while True:
+    print("\nUrgency Level:")
+    print(result["urgency_level"])
 
-        message = input(
-            "Emergency: "
-        )
+    print("\nPriority:")
+    print(result["priority"])
 
+    print("\nRecommended Resources:")
 
-        if message.strip().lower() == "exit":
-
-            print(
-                "\nPrediction pipeline stopped."
-            )
-
-            break
-
-
-        try:
-
-            result = predict_emergency(
-                message
-            )
-
-            print_prediction(
-                result
-            )
-
-
-        except (ValueError, TypeError) as error:
-
-            print(
-                "\nError:",
-                error
-            )
-
-        except Exception as error:
-
-            print(
-                "\nUnexpected error:",
-                error
-            )
+    for resource in result["resources"]:
+        print("-", resource)
