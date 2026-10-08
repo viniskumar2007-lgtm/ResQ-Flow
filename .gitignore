@@ -223,3 +223,14 @@ backend/.env
 backend/venv/
 backend/__pycache__/
 backend/*.pyc
+# Flutter
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/pubspec.lock
+
+# Flutter generated files
+mobile/build_log.txt
+mobile/**/build/
